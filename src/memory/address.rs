@@ -30,7 +30,7 @@ pub fn get_memory_address(pid: u32) -> Option<*mut c_void> {
             return Some(info.BaseAddress);
         }
         // Move the address to the next memory region to check
-        address = (info.BaseAddress as usize + info.RegionSize as usize) as *mut _;
+        address = (info.BaseAddress as usize + info.RegionSize) as *mut _;
     }
     None
 }

@@ -23,18 +23,17 @@ pub fn read_process_memory(pid: u32, address: usize) {
     let mut file = match File::create("WINREADER-DUMP.txt") {
         Ok(file) => file,
         Err(e) => {
-            println!("Error: Can't create a file for buffer memory dump: {:?}", e);
+            println!("Error: Can't create a file for buffer memory dump: {e:?}");
             std::process::exit(1);
         }
     };
     
     let binding = String::from_utf8_lossy(&buffer);
     match file.write_all(binding.as_bytes()) {
-        Ok(_) => return,
+        Ok(_) => (),
         Err(e) => {
             println!(
-                "Error: Couldn't write the memory buffer in txt dump file: {:?}",
-                e
+                "Error: Couldn't write the memory buffer in txt dump file: {e:?}"
             );
             std::process::exit(1);
         }
