@@ -27,8 +27,8 @@ pub fn read_process_memory(pid: u32, address: usize) {
             std::process::exit(1);
         }
     };
-    let binding = buffer.to_vec();
-    let binding = String::from_utf8_lossy(&binding);
+    
+    let binding = String::from_utf8_lossy(&buffer);
     match file.write_all(binding.as_bytes()) {
         Ok(_) => return,
         Err(e) => {
