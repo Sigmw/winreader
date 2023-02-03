@@ -2,7 +2,7 @@ mod memory;
 mod module;
 use crate::memory::address::get_memory_address;
 use crate::memory::path::get_path_process;
-use crate::memory::read::read_process_memory;
+use crate::memory::stack::read_process_stack;
 use crate::memory::mem::get_process_mem;
 use crate::module::modules::print_dependencies;
 use clap::{Arg, Command};
@@ -21,17 +21,19 @@ fn main() {
 
     let pid = matches.get_one::<u32>("PID").unwrap();
     let address = get_memory_address(*pid);
-    let adress_usize = address.unwrap() as usize;
+    let address_usize = address.unwrap() as usize;
     let process_path = get_path_process(*pid);
     let module_dependencies = print_dependencies(*pid);
     let mem_alloc = get_process_mem(*pid);
     let mem_alloc = mem_alloc / 1024 / 1024;
-    read_process_memory(*pid, adress_usize);
+    let mem_stack = read_process_stack(*pid, address_usize);
+    // read_process_memory(*pid, address_usize);
 
     println!("Informations about {} PID:", *pid);
     println!("Process name: {:?}", process_path.unwrap());
     println!("Memory Adress: {:?}", address.unwrap());
     println!("Allocated Memory: {mem_alloc:?}MiB");
     println!("Module dependencies: {module_dependencies:?}");
+    println!("Memory stack: {mem_stack:?}");
     println!("Memory Buffer saved in WINREADER-DUMP.txt");
 }

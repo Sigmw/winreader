@@ -9,7 +9,7 @@ Winreader is able to return information such as: process path, memory address, b
 |            |             |
 |----------------|------------------------|
 | Process Path   | Memory Address         |
-| Buffer Address | Allocated Memory (MiB) |
+| Stack Value    | Allocated Memory (MiB) |
 | Dependencies (DLLs, modules), that the process is using |
 
 ### Usage
@@ -38,7 +38,6 @@ A file called `WINREADER-DUMP.txt` will be created inside the directory where th
 
 | Tool      | Description|
 |-----------|------------|
-| Buffer    | Still incomplete, having erratic output in the text file. |
 | GUI       | Intent to move software from CLI to GUI, using WinAPI.       |
 
 PRs are very welcome! 
