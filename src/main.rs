@@ -8,8 +8,10 @@ use crate::memory::mem::get_process_mem;
 use crate::memory::path_name::get_path_and_name_process;
 use crate::memory::stack::read_process_stack;
 use crate::module::modules::print_dependencies;
+use crate::memory::registers::get_registers;
 use chrono::prelude::*;
 use clap::{Arg, Command};
+use memory::registers::Registers;
 use winapi::ctypes::c_void;
 
 fn main() {
@@ -32,15 +34,15 @@ fn main() {
     let mem_alloc = get_process_mem(*pid);
     let mem_alloc = mem_alloc / 1024 / 1024;
     let mem_stack = read_process_stack(*pid, address_usize);
-    
-    create_file_dump(*pid, process_path, process_name, address.unwrap(), mem_alloc, mem_stack, module_dependencies)
+    let registers_frame = get_registers(*pid);
+    create_file_dump(*pid, process_path, process_name, address.unwrap(), mem_alloc, mem_stack, module_dependencies, registers_frame);
 }
 
-fn create_file_dump(pid: u32, path: String, name: String, address: *mut c_void, mem_alloc: u64, mem_stack: Vec<u8>, deps: Vec<String>) {
+fn create_file_dump(pid: u32, path: String, name: String, address: *mut c_void, mem_alloc: u64, mem_stack: Vec<u8>, deps: Vec<String>, registers: Registers) {
     let local: DateTime<Local> = Local::now();
     let date = local.format("%H:%M:%S - %d/%m/%Y").to_string();
 
-    let mut buffer = format!("----------------------------WINREADER DUMP----------------------------\n\nDATE: {date}\n\nPROCESS PID: {pid}\nPROCESS NAME: {name:?}\nPROCESS PATH: {path}\nMEMORY ADDRESS: {address:?}\nALLOCATED MEMORY (IN PROCESS DUMP REVIEW): {mem_alloc}MiB\n\nMEMORY STACK DUMP: {mem_stack:?}\n\nMODULE DEPENDENCIES USED BY PROCESS:\n");
+    let mut buffer = format!("----------------------------WINREADER DUMP----------------------------\n\nDATE: {date}\n\nPROCESS PID: {pid}\nPROCESS NAME: {name:?}\nPROCESS PATH: {path}\nMEMORY ADDRESS: {address:?}\nALLOCATED MEMORY (IN PROCESS DUMP REVIEW): {mem_alloc}MiB\n\nMEMORY REGISTERS VALUE:\nRAX={} CS={} RIP={} EFLGS={}\nRBX={} SS={} RSP={} RBP={}\nRCX={} DS={} RSI={} FS={}\nRDX={} ES={} RDI={} GS={}\n\nMEMORY STACK DUMP: {mem_stack:?}\n\nMODULE DEPENDENCIES USED BY PROCESS:\n", registers.rax, registers.cs, registers.rip, registers.eflgs, registers.rbx, registers.ss, registers.rsp, registers.rbp, registers.rcx, registers.ds, registers.rsi, registers.fs, registers.rdx, registers.es, registers.rdi, registers.gs);
     for dep in deps {
         buffer.push_str(format!("- {dep}\n").as_str());
     }

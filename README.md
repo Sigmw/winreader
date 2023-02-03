@@ -10,7 +10,7 @@ Winreader is able to return information such as: process path, memory address, b
 |----------------|------------------------|
 | Process Path   | Memory Address         |
 | Stack Value    | Allocated Memory (MiB) |
-| Dependencies (DLLs, modules), that the process is using |
+| Dependencies (DLLs, modules), that the process is using | Value of assembly Registers (x86_64) in frame
 
 ### Usage
 
