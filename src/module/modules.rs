@@ -4,7 +4,7 @@ use winapi::um::handleapi::{CloseHandle};
 use winapi::shared::minwindef::HMODULE;
 use crate::error::error_fmt::get_last_error_message;
 use crate::memory::open::open_process_memory;
-use crate::memory::path::get_path_process;
+use crate::memory::path_name::get_path_and_name_process;
 
 pub fn print_dependencies(pid: u32) -> Vec<String> {
     let process = open_process_memory(pid);
@@ -22,8 +22,7 @@ pub fn print_dependencies(pid: u32) -> Vec<String> {
     modules.resize(module_count as usize, ptr::null_mut());
 
     let mut modules_file_name: Vec<String> = Vec::new();
-    let process_name = get_path_process(pid);
-    let process_name = process_name.unwrap();
+    let (process_name, _) = get_path_and_name_process(pid).unwrap();
     for i in 0..module_count {
         let handle = modules[i as usize];
         let mut file_name = [0u16; 1024];

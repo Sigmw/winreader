@@ -1,7 +1,9 @@
+use std::path::Path;
+
 use crate::memory::open;
 use winapi::um::psapi::GetModuleFileNameExW;
 
-pub fn get_path_process(pid: u32) -> Option<String> {
+pub fn get_path_and_name_process(pid: u32) -> Option<(String, String)> {
     let handle = open::open_process_memory(pid);
     let mut buffer = vec![0u16; 1024];
     let length = unsafe {
@@ -15,6 +17,9 @@ pub fn get_path_process(pid: u32) -> Option<String> {
     if length == 0 {
         return None;
     }
-    let process_name = String::from_utf16_lossy(&buffer[..length as usize]);
-    Some(process_name)
+    let process_path = String::from_utf16_lossy(&buffer[..length as usize]);
+    let path = Path::new(&process_path);
+    let process_name = path.file_name().unwrap().to_str().unwrap().to_string();
+
+    Some((process_path, process_name))
 }

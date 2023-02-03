@@ -32,7 +32,7 @@ Options:
   -V, --version  Print version
 ```
 
-A file called `WINREADER-DUMP.txt` will be created inside the directory where the `winreader.exe` is located, with all buffer memory information.
+A file called `WINREADER-DATE.txt` will be created inside the directory where the `winreader.exe` is located, with all buffer memory information.
 
 ### TODO
 
