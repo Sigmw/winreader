@@ -5,7 +5,7 @@
 
 Winreader is a process memory reader for Windows, implemented and developed in the Rust language, using the official [Microsoft Rust API](https://crates.io/crates/winapi).
 
-Winreader is able to return information such as: process path, memory address, buffer address.
+Winreader is able to return information such as: process path, memory address, buffer address and size of allocated memory.
 
 ### Usage
 
