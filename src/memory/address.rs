@@ -1,3 +1,4 @@
+use crate::error::error_fmt::get_last_error_message;
 use crate::memory::open;
 use std::ptr;
 use winapi::ctypes::c_void;
@@ -20,7 +21,9 @@ pub fn get_memory_address(pid: u32) -> Option<*mut c_void> {
             )
         };
         if result == 0 {
-            break;
+            let error =  get_last_error_message();
+            println!("Coudn't retrieve information about the virtual address space of {pid} PID: {error}");
+            std::process::exit(1);
         }
         // Check if the memory is committed (i.e., it is allocated and reserved for the process) and is private
         if info.State == winapi::um::winnt::MEM_COMMIT
@@ -32,5 +35,4 @@ pub fn get_memory_address(pid: u32) -> Option<*mut c_void> {
         // Move the address to the next memory region to check
         address = (info.BaseAddress as usize + info.RegionSize) as *mut _;
     }
-    None
 }

@@ -2,6 +2,7 @@ use std::ptr;
 use winapi::um::psapi::{EnumProcessModulesEx, GetModuleFileNameExW};
 use winapi::um::handleapi::{CloseHandle};
 use winapi::shared::minwindef::HMODULE;
+use crate::error::error_fmt::get_last_error_message;
 use crate::memory::open::open_process_memory;
 use crate::memory::path::get_path_process;
 
@@ -11,7 +12,12 @@ pub fn print_dependencies(pid: u32) -> Vec<String> {
     let mut module_count = 0;
     let mut modules: Vec<HMODULE> = vec![ptr::null_mut(); 1024];
     unsafe {
-        EnumProcessModulesEx(process, modules.as_mut_ptr(), (1024 * std::mem::size_of::<HMODULE>()) as u32, &mut module_count, 0x03);
+        let result = EnumProcessModulesEx(process, modules.as_mut_ptr(), (1024 * std::mem::size_of::<HMODULE>()) as u32, &mut module_count, 0x03);
+        if result == 0 {
+            let error = get_last_error_message();
+            println!("Error: Failed to enumerate process modules of {pid} PID: {error}");
+            std::process::exit(1);
+        }
     }
     modules.resize(module_count as usize, ptr::null_mut());
 

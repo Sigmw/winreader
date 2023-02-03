@@ -1,9 +1,10 @@
 mod memory;
 mod module;
+mod error;
 use crate::memory::address::get_memory_address;
+use crate::memory::mem::get_process_mem;
 use crate::memory::path::get_path_process;
 use crate::memory::stack::read_process_stack;
-use crate::memory::mem::get_process_mem;
 use crate::module::modules::print_dependencies;
 use clap::{Arg, Command};
 

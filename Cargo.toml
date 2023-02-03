@@ -14,4 +14,4 @@ description = "A process memory reader for Windows"
 
 [dependencies]
 clap = { version = "4.1.4" }
-winapi = { version = "0.3.9", features = ["winuser", "memoryapi", "handleapi", "processthreadsapi", "psapi"] }
+winapi = { version = "0.3.9", features = ["winuser", "memoryapi", "handleapi", "processthreadsapi", "psapi", "errhandlingapi"] }
