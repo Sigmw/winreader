@@ -32,7 +32,9 @@ pub fn get_registers(pid: u32) -> Registers {
     context.ContextFlags = winapi::um::winnt::CONTEXT_FULL;
     let success = GetThreadContext(h_thread, &mut context as *mut CONTEXT);
     if success == 0 {
-        panic!("GetThreadContext failed");
+        let error = get_last_error_message();
+        println!("Error: GetThreadContext failed: {error:?}");
+        std::process::exit(1);
     }
 
     Registers {
