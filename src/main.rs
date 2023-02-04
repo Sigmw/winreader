@@ -50,7 +50,6 @@ fn main() {
     let mem_alloc_mb = mem_alloc_kb / MB_FACTOR;
     let mem_stack = read_process_stack(*pid, address_usize);
     let registers_frame = get_registers(*pid);
-
     create_file_dump(Params {
         pid: *pid,
         path: process_path,
