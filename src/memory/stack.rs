@@ -1,14 +1,12 @@
-use crate::memory::open;
-use winapi::um::{memoryapi::ReadProcessMemory};
-use crate::error::error_fmt::get_last_error_message;
-
+use super::open::open_process_memory;
+use windows_sys::Win32::System::Diagnostics::Debug::ReadProcessMemory;
 
 pub fn read_process_stack(pid: u32, address: usize) -> Vec<u8> {
-    let handle = open::open_process_memory(pid);
+    let handle = open_process_memory(pid);
     let buffer = [0u8; 1024];
     let buffer_ptr = buffer.as_ptr() as *mut u8;
     let mut bytes_read: usize = 0;
-    let read = unsafe {
+    let result = unsafe {
         ReadProcessMemory(
             handle,
             address as *const _,
@@ -17,9 +15,8 @@ pub fn read_process_stack(pid: u32, address: usize) -> Vec<u8> {
             &mut bytes_read,
         )
     };
-    if read == 0 {
-        let error = get_last_error_message();
-        println!("Error: Can't read the proccess memory of {pid} PID: {error}");
+    if result == 0 {
+        println!("Error: Could not read process memory of PID {pid}.");
         std::process::exit(1);
     }
     let buffer_slice = unsafe { std::slice::from_raw_parts(buffer_ptr, bytes_read) };

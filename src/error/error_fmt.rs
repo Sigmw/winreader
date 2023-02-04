@@ -1,10 +1,10 @@
 use std::ffi::OsString;
 use std::os::windows::ffi::OsStringExt;
-use std::ptr;
-use winapi::shared::minwindef::{DWORD};
-use winapi::um::errhandlingapi::GetLastError;
-use winapi::um::winbase::{
-    FormatMessageW, FORMAT_MESSAGE_FROM_SYSTEM, FORMAT_MESSAGE_IGNORE_INSERTS,
+use windows_sys::Win32::{
+    Foundation::GetLastError,
+    System::Diagnostics::Debug::{
+        FormatMessageW, FORMAT_MESSAGE_FROM_SYSTEM, FORMAT_MESSAGE_IGNORE_INSERTS,
+    },
 };
 
 pub fn get_last_error_message() -> String {
@@ -14,12 +14,12 @@ pub fn get_last_error_message() -> String {
     let result = unsafe {
         FormatMessageW(
             FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-            ptr::null_mut(),
+            std::ptr::null_mut(),
             error,
             0,
             buffer.as_mut_ptr(),
-            buffer.len() as DWORD,
-            ptr::null_mut(),
+            buffer.len() as u32,
+            std::ptr::null_mut(),
         )
     };
     if result == 0 {

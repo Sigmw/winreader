@@ -12,7 +12,7 @@ use clap::{Arg, Command};
 use memory::registers::Registers;
 use std::fs::File;
 use std::io::prelude::*;
-use winapi::ctypes::c_void;
+use std::os::raw::c_void;
 
 struct Params {
     pid: u32,
@@ -28,7 +28,7 @@ struct Params {
 fn main() {
     let matches = Command::new("winreader")
         .arg_required_else_help(true)
-        .version("1.0.0")
+        .version("2.0.0")
         .about("winreader: Read buffer memory in processes on Windows")
         .arg(
             Arg::new("PID")

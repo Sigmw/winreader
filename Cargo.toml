@@ -15,4 +15,4 @@ description = "A process memory reader for Windows"
 [dependencies]
 chrono = "0.4.23"
 clap = { version = "4.1.4" }
-winapi = { version = "0.3.9", features = ["winuser", "memoryapi", "handleapi", "processthreadsapi", "psapi", "errhandlingapi", "tlhelp32"] }
+windows-sys = { version = "0.45.0", features = ["Win32_System_Memory", "Win32_Foundation", "Win32_System_Threading", "Win32_System_ProcessStatus", "Win32_System_Kernel", "Win32_System_Diagnostics_Debug", "Win32_System_Diagnostics_ToolHelp"] }
