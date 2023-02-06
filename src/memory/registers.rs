@@ -34,13 +34,13 @@ const CONTEXT_FULL: u32 = CONTEXT_CONTROL | CONTEXT_INTEGER | CONTEXT_FLOATING_P
 pub fn get_registers(pid: u32) -> Registers {
     unsafe {
         let h_thread = get_thread_handle_by_pid(pid);
-        let error = get_last_error_message();
-        println!("{error:?}");
+
         let mut context: CONTEXT = std::mem::zeroed();
         context.ContextFlags = CONTEXT_FULL;
         let success = GetThreadContext(h_thread, &mut context as *mut CONTEXT);
         if success == 0 {
-            panic!("GetThreadContext failed");
+            let error = get_last_error_message();
+            println!("Error: GetThreadContext failed: {error:?}");
         }
 
         Registers {
